@@ -1,0 +1,21 @@
+.list-content {
+  margin-top: 30px;
+}
+.list-content > li {
+  margin-bottom: 5px;
+}
+.list-content > li a {
+  border-top-right-radius: 0.375rem /* 6px */;
+  border-bottom-left-radius: 0.375rem /* 6px */;
+  border-bottom-right-radius: 1.5rem /* 24px */;
+  border-top-left-radius: 1.5rem /* 24px */;
+  padding: 5px 10px;
+  transition: all 0.3s ease;
+}
+
+.list-content > li a:hover {
+  background-color: white;
+  color: #008848;
+  margin-left: 10px;
+  /* transition: all linear 0.3s; */
+}
