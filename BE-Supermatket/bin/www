@@ -24,6 +24,27 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+// Sockets
+const io = require("socket.io")(server, {
+  cors: {
+    origin: true,
+    credentials: true,
+  },
+});
+//cấu hình các events socket
+io.on("connection", (socket) => {
+  console.log("SOCKET IS CONNECTED");
+  socket.on("client-message", (data) => {
+    console.log("client-message", data);
+    // io.emit("server-message", {
+    //   // kích haojt rồi truyền thông báo
+    //   message: "Tôi thấy rồi với",
+    // });
+    // cho cả 2 client đều thấy data từ client trả về
+    io.emit("server-message", data);
+  });
+  // kích hoạt sự kiện server-message được tạo bên client và trả thông báo cho client
+});
 
 server.listen(port);
 server.on("error", onError);
