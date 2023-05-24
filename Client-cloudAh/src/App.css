@@ -124,3 +124,64 @@
     transform: translateY(0);
   }
 }
+
+/* quay biểu tượng icons */
+.routed__icons {
+  transform: rotate(360deg);
+  transition: transform 0.3s ease;
+}
+.routed__icons--back {
+  transform: rotate(-360deg);
+  transition: transform 0.3s ease;
+}
+.box__shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.rotating-icon {
+  animation: rotate 10s infinite linear;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.show__menu {
+  position: relative;
+  animation: showMenu 0.3s linear forwards;
+}
+.show__close {
+  animation: showMenu__close 0.3s linear forwards;
+}
+@keyframes showMenu {
+  0% {
+    transform: translateX(0px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(35px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(60px);
+    opacity: 1;
+  }
+}
+@keyframes showMenu__close {
+  0% {
+    transform: translateX(60px);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(35px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 0;
+  }
+}

@@ -8,7 +8,6 @@ const Navbar = () => {
   React.useEffect(() => {
     axiosClient.get("/categories").then((response) => {
       setCategories(response.data);
-      console.log("ca", categories);
     });
   }, []);
   return (
@@ -42,14 +41,14 @@ const Navbar = () => {
           <div className="navbar-link">Về chúng tôi</div>
         </Link>
         <Link to={"/components/community"} className="navbar-list ">
-          <a className="navbar-link" href="">
+          <div className="navbar-link" href="">
             Cộng động
-          </a>
+          </div>
         </Link>
         <Link to={"/components/contactUs"} className="navbar-list ">
-          <a className="navbar-link" href="">
+          <div className="navbar-link" href="">
             Liên hệ
-          </a>
+          </div>
         </Link>
         <li className="navbar-list ">
           <Link to={"/history/products"} className="navbar-link" href="">

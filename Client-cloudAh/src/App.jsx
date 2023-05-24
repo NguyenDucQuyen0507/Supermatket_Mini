@@ -18,6 +18,7 @@ import HistoryProduct from "./components/Home/History/HistoryProduct";
 import HistoryProductDetails from "./components/Home/History/HistoryProductDetails";
 import UserInformation from "./components/Account/UserInformation";
 import SearchProducts from "./components/Home/Shop/SearchProducts/SearchProducts";
+import Messeger from "./components/Home/Messeger/index";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { axiosClient } from "./Libraries/axiosClient";
@@ -31,7 +32,7 @@ function App() {
   return (
     <div className="">
       {loading && (
-        <div className="bg-green-200 h-[100vh] flex  justify-center items-center w-[100%] ">
+        <div className="bg-green-20 0 h-[100vh] flex  justify-center items-center w-[100%] ">
           <p className="text-[20px] animation_loading">
             Đang tải dữ liệu, vui lòng chờ giây lát ...
           </p>
@@ -78,6 +79,7 @@ function App() {
               </Routes>
             </section>
             <footer>
+              <Messeger />
               <Footer />
             </footer>
           </BrowserRouter>
