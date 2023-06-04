@@ -1,0 +1,87 @@
+login với Google
+b1 npm install passport-google-oauth20 passport-local
+Sau đó vào Google Cloud Console
+Vào mục OAuth consents screen để cấu hình domain
+ cái đầu tiên http://127.0.0.1:5173/
+    thứ 2       http://127.0.0.1:5173/privacy
+    thứ 3       http://127.0.0.1:5173/tos
+
+    Sau đó nhập Email
+
+Luư ý khi đặt tênAuthorized redirect URIs
+http://127.0.0.1:8080/customers/auth/google/callback
+trong đó customers là collection trong BE của mình
+
+Sau đó ta tạo những phương thức để chứa dữ liệu của mình
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "Login failure",
+  });
+});
+Đầu tiên ta sẽ chạy /auth/google để mở google.
+
+trong phần đăng kí clound google thì ta sẽ đk url riderect là http://127.0.0.1:8080/customers/auth/google/callback (trong đó costomers là collection của mình)
+
+Thì sau khi ta chọn tài khoản thành công nó sẽ tựu động chạy qua auth/google/callback
+
+Kế tiếp là thằng success là thằng dùng để lấy tài khoản mình mới đăng nhập. Ta sẽ dùng fetch hay axios để gọi tới nó  fetch("http://127.0.0.1:8080/customers/login/success")
+
+*Muốn nó có lấy được hay không trước tiên ta phải kt nó với BE http://127.0.0.1:8080/customers/login/success để kiểm tra những gì nó trả về.
+
+Vì ta muốn lưu vào localStorge nên ta phải 
+
+
+router.get("/login/success", (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "Login successfull",
+      user: req.user,
+      cookie: req.cookies,
+    });
+  }
+});
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.clearCookie("session_google_account");
+  res.redirect(URL_CLIENT);
+});
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: URL_CLIENT,
+    failureRedirect: "/login/failed",
+  })
+);
+
+
+//Githup
+npm install passport-github2
+
+//Đối với facebook thì ta làm khác 
+vào github tìm passport-facebook-token
+npm install passport-facebook-token
+Sau đó ta vào trang developer facebook tạo một tài khoản
+Sau đó vào https://developers.facebook.com/apps/184166790921301/fb-login/settings/ để cài URI chuyển hướng OAuth hợp lệ là 2 url BE và FE 
+http://localhost:9000, https://localhost:3000
+Sau vào lấy id và secret của mình làm cho phần cấp id và clientSecret trong file app.js
+sau đó tạo một đường dẫn để kt TOKEN
+
+router
+  .route("/auth/facebook")
+  .post(
+    passport.authenticate("facebook-token", { session: false }),
+    customers.authFacebook
+  );
+  khi kt trên postmen 
+  Post http://127.0.0.1:8080/customers/auth/facebook
+  
+  Muốn lấy  token để kt thì ta vào trang facebook for developers chọn phần tool rồi tạo một token sau đó copy nó dán vào 
+  {
+    "access_token":"EAACnf6wmZCFUBAFOCwXCMh1ZAejc9wl6VURdGmKM0z5stClwKDPfL3O2CRIlY8SsumZBbkMHrQoHq2T63hg9I2FsylfQMIGpiaC4IajYZA3jUiIgF4pA5Cyo2U4WoAgZCylWDWorksDIRumCjZClgyAFhn3RNhA6lktcwiZCv0G6iztXMxI25LecsJeiwe8qrwZD"
+}

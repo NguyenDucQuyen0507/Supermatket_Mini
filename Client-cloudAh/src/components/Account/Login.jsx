@@ -1,9 +1,14 @@
 import React from "react";
 import { Button, ConfigProvider, Form, Input } from "antd";
-import { ArrowRightOutlined, GoogleOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  GoogleOutlined,
+  GithubOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { axiosClient } from "../../Libraries/axiosClient";
 import { useUser } from "../../Hook/useUser";
+import { API_URL } from "../../Constants/URL";
 const index = () => {
   const { add } = useUser((state) => state);
   const onFinish = (values) => {
@@ -15,7 +20,7 @@ const index = () => {
         // window.location.href = "/";
         axiosClient.get(`/customers/${response.data._id}`).then((data) => {
           add(data.data);
-          // console.log(data);
+          console.log(data);
           window.location.href = "/";
         });
       })
@@ -23,6 +28,13 @@ const index = () => {
         console.log(err);
       });
   };
+  const handleGoogle = () => {
+    window.open(API_URL + "/customers/auth/google", "_self");
+  };
+  const handleGithub = () => {
+    window.open(API_URL + "/customers/auth/github", "_self");
+  };
+
   const LogForm = Form.useForm();
   return (
     <div className="container mt-[150px] mb-4">
@@ -32,7 +44,10 @@ const index = () => {
       <hr style={{ background: "#008848", height: "2px" }} />
       <div className="mt-[50px] ">
         <div className=" max-w-[400px] m-auto">
-          <div className="bg-orange-300  border w-[100%] h-[50px] flex items-center justify-between hover:opacity-80 cursor-pointer">
+          <button
+            onClick={handleGoogle}
+            className="bg-orange-300  border w-[100%] h-[50px] flex items-center justify-between hover:opacity-80 cursor-pointer"
+          >
             <h2 className="px-3 text-black font-semibold text-[20px]">
               Đăng nhập với Google
             </h2>
@@ -44,7 +59,23 @@ const index = () => {
                 padding: "0 12px",
               }}
             />
-          </div>
+          </button>
+          <button
+            onClick={handleGithub}
+            className="bg-black  border w-[100%] h-[50px] flex items-center justify-between hover:opacity-80 cursor-pointer"
+          >
+            <h2 className="px-3 text-white font-semibold text-[20px]">
+              Đăng nhập với Github
+            </h2>
+            <GithubOutlined
+              style={{
+                color: "red",
+                fontSize: "30px",
+                height: "100%",
+                padding: "0 12px",
+              }}
+            />
+          </button>
           <div className="relative">
             <hr className="my-6 " />
             <span className="hr-or">Hoặc</span>

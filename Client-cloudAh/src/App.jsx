@@ -32,7 +32,7 @@ function App() {
   return (
     <div className="">
       {loading && (
-        <div className="bg-green-20 0 h-[100vh] flex  justify-center items-center w-[100%] ">
+        <div className="bg-green-200 h-[100vh] flex  justify-center items-center w-[100%] ">
           <p className="text-[20px] animation_loading">
             Đang tải dữ liệu, vui lòng chờ giây lát ...
           </p>

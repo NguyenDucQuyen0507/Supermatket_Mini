@@ -2,10 +2,8 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { API_URL } from "../../../Constants/URL";
 import { useCart } from "../../../Hook/useCart";
-import { AiOutlinePlus, AiTwotoneDelete } from "react-icons/ai";
-import { GrSubtract } from "react-icons/gr";
 import { axiosClient } from "../../../Libraries/axiosClient";
-
+import numeral from "numeral";
 const ProductsDetail = () => {
   const { categoryId, id } = useParams();
   console.log("cateId", categoryId);
@@ -63,7 +61,7 @@ const ProductsDetail = () => {
                   : "text-red-600 font-bold"
               }
             >
-              Giá: {productDetails.price}
+              Giá: {numeral(productDetails.price).format("0,0$")}
             </p>
             <p>Giảm giá: {productDetails.discount}%</p>
             <p
@@ -71,7 +69,7 @@ const ProductsDetail = () => {
                 productDetails.discount ? "text-red-600 font-bold" : "hidden"
               }
             >
-              Giá còn: {productDetails.total}
+              Giá còn: {numeral(productDetails.total).format("0,0$")}
             </p>
             <p>
               Tình trạng:{" "}

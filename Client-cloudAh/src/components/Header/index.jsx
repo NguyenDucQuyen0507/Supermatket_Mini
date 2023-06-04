@@ -27,10 +27,17 @@ const index = () => {
   //   );
   // };
   //jsx
+  // thất bại
   const logout = () => {
-    localStorage.clear();
-    window.location.reload();
-    window.location.href = "/";
+    console.log("logout");
+    try {
+      localStorage.removeItem("cookie-google");
+      localStorage.clear();
+      window.open(API_URL + "/customers/logout", "_self");
+      window.location.assign("/");
+    } catch (error) {
+      console.log("Logout error:", error);
+    }
   };
 
   const loginBtn = (
@@ -38,7 +45,11 @@ const index = () => {
       <div className="flex items-center h-full w-full">
         <img
           className="w-[30px] object-cover"
-          src={`${API_URL}${users.avatar}`}
+          src={
+            users.accountType === "google" || users.accountType === "github"
+              ? `${users.avatar}`
+              : `${API_URL}${users.avatar}`
+          }
           alt=""
         />
         <span className="ml-[5px]"> {users.fullName}</span>
@@ -94,7 +105,10 @@ const index = () => {
               <Search />
             </div>
             <div className="flex items-center">
-              {window.localStorage.getItem("token") ? loginBtn : logoutBtn}
+              {window.localStorage.getItem("token") ||
+              window.localStorage.getItem("cookie-google")
+                ? loginBtn
+                : logoutBtn}
               {/* <Link to={"/account/register"}>
                 <div className="flex items-centercursor-pointer ">
                   <div className="font-bold text-primary">Đăng kí</div>

@@ -3,6 +3,7 @@ import { Form, Input, message } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { axiosClient } from "../../Libraries/axiosClient";
+import { API_URL } from "../../Constants/URL";
 const Register = () => {
   const [registerForm] = Form.useForm();
   const onFinish = (values) => {
@@ -21,13 +22,19 @@ const Register = () => {
           );
       });
   };
+  const handleGoogle = () => {
+    window.open(API_URL + "/customers/auth/google", "_self");
+  };
   return (
     <div className="container mt-[150px] mb-4">
       <h1 className="text-left text-primary text-[35px] font-bold ">Đăng kí</h1>
       <hr style={{ background: "#008848", height: "2px" }} />
       <div className="mt-[50px] ">
         <div className=" max-w-[400px] m-auto">
-          <div className="bg-orange-300  border w-[100%] h-[50px] flex items-center justify-between hover:opacity-80 cursor-pointer">
+          <button
+            onClick={handleGoogle}
+            className="bg-orange-300  border w-[100%] h-[50px] flex items-center justify-between hover:opacity-80 cursor-pointer"
+          >
             <h2 className="px-3 text-black font-semibold text-[20px]">
               Đăng nhập với Google
             </h2>
@@ -39,7 +46,7 @@ const Register = () => {
                 padding: "0 12px",
               }}
             />
-          </div>
+          </button>
           <div className="relative">
             <hr className="my-6 " />
             <span className="hr-or">Hoặc</span>
