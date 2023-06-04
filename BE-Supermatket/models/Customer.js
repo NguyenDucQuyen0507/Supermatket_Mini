@@ -30,7 +30,18 @@ const customerSchema = new Schema({
       // message: (props) => `{props.value} is not a valid email!`,
     },
   },
+
   password: { type: String },
+  //h ta sẽ tạo một google id để kt id đó
+  authGoogleId: { type: String, default: null },
+  authGithub: { type: String, default: null },
+  //Nếu làm fb
+  authFacebookId: { type: String, default: null },
+  accountType: {
+    type: String,
+    enum: ["local", "google", "facebook", "github"],
+    default: "local",
+  },
   birthDay: {
     type: Date,
     validate: {
@@ -48,6 +59,9 @@ const customerSchema = new Schema({
 
 // Virtuals
 customerSchema.virtual("fullName").get(function () {
+  if (this.firstName === "Unknown") {
+    return this.lastName;
+  }
   return this.firstName + " " + this.lastName;
 });
 

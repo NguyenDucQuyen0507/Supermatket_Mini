@@ -1,15 +1,14 @@
 var express = require("express");
 var router = express.Router();
 const yup = require("yup");
-
 const { validateSchema } = require("../schemas");
 const { default: mongoose } = require("mongoose");
 const { Customer } = require("../models");
 
 const { CONNECTION_STRING } = require("../constants/connectionDB");
-
 //MONGOOSE
 mongoose.connect(CONNECTION_STRING);
+const customers = require("../controllers/customersFb.js");
 
 //JWT
 var passport = require("passport");
@@ -20,7 +19,7 @@ const jwtSettings = require("../constants/jwtSettings");
 const { findDocuments, findDocument } = require("../helpers/MongoDbHelper");
 
 //============================BEGIN MONGOOSE============================//
-
+const URL_CLIENT = "http://127.0.0.1:5173/";
 /* GET data Customers. */
 router.get("/", function (req, res, next) {
   try {
@@ -65,6 +64,7 @@ router.get("/search", (req, res, next) => {
 //Insert Customer
 router.post("/", (req, res, next) => {
   try {
+    if (req.accoutType == "local") next();
     const data = req.body;
     const newItem = new Customer(data);
     newItem.save().then((result) => {
@@ -111,6 +111,67 @@ router.delete("/:id", (req, res, next) => {
   }
 });
 
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "Login failure",
+  });
+});
+router.get("/login/success", (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "Login successfull",
+      user: req.user,
+      cookie: req.cookies,
+    });
+  }
+});
+router.get("/logout", (req, res) => {
+  req.logout();
+  req.session.destroy();
+  res.clearCookie("cookie-google");
+  res.redirect(URL_CLIENT);
+});
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: URL_CLIENT,
+    failureRedirect: "/login/failed",
+  })
+);
+router.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["profile"] })
+);
+router.get(
+  "/auth/github/callback",
+  passport.authenticate("github", {
+    successRedirect: URL_CLIENT,
+    failureRedirect: "/login/failed",
+  })
+);
+// router
+//   .route("/auth/facebook")
+//   .post(
+//     passport.authenticate("facebook-token", { scope: ["profile"] }),
+//     customers.authFacebook
+//   );
+router.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", { scope: ["profile"] })
+);
+router.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    successRedirect: URL_CLIENT,
+    failureRedirect: "/login/failed",
+  })
+);
 // LOGIN VALIDATE | TEST LOGIN WITH BODY  ---------- //
 const loginSchema = yup.object({
   body: yup.object({
@@ -120,71 +181,6 @@ const loginSchema = yup.object({
     }),
   }),
 });
-
-// TEST LOGIN WITH JWT ---------- //
-// router.post(
-//   "/login-jwt",
-//   validateSchema(loginSchema),
-//   async (req, res, next) => {
-//     const email = req.body.email;
-//     const password = req.body.password;
-
-//     console.log("* email: ", email);
-//     console.log("* password: ", password);
-
-//     const found = await findDocuments(
-//       {
-//         query: {
-//           email: email,
-//           password: password,
-//         },
-//       },
-//       "customers"
-//     );
-//     console.log(found);
-
-//     if (found && found.length > 0) {
-//       const id = found[0]._id.toString();
-//       const _id = found[0]._id;
-//       // login: OK
-//       // jwt | token grant
-//       var payload = {
-//         // thông tin trong biến này sẽ được in khi cấp token
-//         user: {
-//           email: email,
-//           fullName: "End User",
-//         },
-//         application: "ecommerce",
-//         message: "payload",
-//       };
-
-//       var secret = jwtSettings.SECRET;
-
-//       var token = jwt.sign(payload, secret, {
-//         expiresIn: 24 * 60 * 60, // expires in 24 hours (24 x 60 x 60)
-//         audience: jwtSettings.AUDIENCE,
-//         issuer: jwtSettings.ISSUER,
-//         subject: id, // Thường dùng để kiểm tra JWT lần sau
-//         algorithm: "HS512",
-//       });
-
-//       // REFRESH TOKEN
-//       const refreshToken = jwt.sign(
-//         {
-//           id,
-//         },
-//         secret,
-//         {
-//           expiresIn: "365d", // expires in 24 hours (24 x 60 x 60) //key word 'expiresIn day string jwt'
-//         }
-//       );
-
-//       res.send({ message: "Login success!", token, refreshToken, _id });
-//       return;
-//     }
-//     res.status(401).send({ message: "Login failed!" });
-//   }
-// );
 router.post(
   "/login-jwt",
   validateSchema(loginSchema),
