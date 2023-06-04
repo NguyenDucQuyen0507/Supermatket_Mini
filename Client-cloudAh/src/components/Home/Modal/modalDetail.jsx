@@ -15,10 +15,7 @@ const ModalDetail = ({ body }) => {
         <p className={`${body.discount ? "text-red-500" : "hidden"}`}>
           Giá còn: {numeral(body.total).format("0,0$")}
         </p>
-        <p>
-          Tình trạng: {body.stock > 0 ? `${body.stock}` : "hết sản phẩm"} sản
-          phẩm
-        </p>
+        <p>Tình trạng: {body.stock > 0 ? `${body.stock}` : "hết "} sản phẩm</p>
         <p>Mô tả sản phẩm: {body.description}</p>
       </div>
     </>
